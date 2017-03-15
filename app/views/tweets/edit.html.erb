@@ -1,0 +1,10 @@
+ <div class="contents row">
+    <%= form_for(@tweet) do |f| %>
+      <h3>
+        編集する
+      </h3>
+      <%= f.text_field :image, placeholder: "Image Url",  name:"image", autofocus:"true" %>
+      <%= f.text_field :text, cols:"30", name:"text", rows:"10" %>
+      <%= f.submit "SENT"%>
+    <% end %>
+  </div>
