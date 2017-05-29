@@ -1,4 +1,4 @@
-class TweetsController < ApplicationController
+class TweetsController < ApplicationController
 
   before_action :move_to_index,except: :index
 
