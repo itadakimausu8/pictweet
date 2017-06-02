@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   devise_for :users
-  # ↑ gemの「devise」をbundle installしたときに追加されるルーティング設定。
+  # ↑ gemの「devise」を取り込んだ後、rails g devise modelしたときに追加されるルーティング設定。
   #   devise関連のルーティング設定がすべてされている。
   #   new_user_session GET  /users/sign_in   devise/sessions#new
   #   user_session  POST   /users/sign_in devise/sessions#create
@@ -27,13 +27,17 @@ Rails.application.routes.draw do
     resources :comments, only: [:create]
     # ↑ commentsコントローラーの７つのアクションのうち,createアクションのみのルーティングを指定する。指定するオプションはonly。
     #↑ commentsコントローラーの７つのアクションのうち,createアクションのみのルーティングを指定する。指定するオプションはonly。
+    #他のオプションにはexcept(指定したものを除く),if(条件)などがある。
   end
   # ↑ doによってルーティングのネストが設定されている。
   #ネストとは入れ子構造に記述することである。
   #この場合だと「resouces :tweets」が「resouces :comments, only: [:create]」を囲んでいる状態である。
+  # ↑ のように書くとルーティングは次のようになる。
+  #  /tweets/:tweet_id/comments(.:format)
   #このように記述することで入れ子の中にあるコントローラー(この場合だとcomment)に入れ子の外にあるコントローラー(この場合だとtweets)に関連したインスタンスがどの情報なのか(tweet_id)を渡すことができる。
 
 
   resources :users,only: [:show]
   #↑ usersコントローラーの７つのアクションのうち,showアクションのみのルーティングを指定する。指定するオプションはonly。
+  #他のオプションにはexcept,ifなどがある。
 end
