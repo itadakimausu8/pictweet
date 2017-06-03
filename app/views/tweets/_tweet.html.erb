@@ -1,27 +1,72 @@
- <div class="content_post" style="background-image: url(<%= tweet.image %>);">
+ <div class="content_post" style="background-image: url(<%= tweet.image %>);">
         <div class="more">
            <span><%= image_tag 'arrow_top.png' %></span>
+          <!-- image_tagはapp/assets/imagesから画像を呼び出すために使うヘルパーメソッドである。
+          画像の名前を書くだけで呼び出すことができる。 -->
         <ul class="more_list">
         <li>
           <%= link_to '詳細',tweet_path(tweet) %>
+          <!-- link_toは簡単にリンクを作ることができるヘルパーメソッド
+          <%= link_to ’リンクに記述する文’,次に進むパス %>
+          またパスはprefixを使っている。
+          rake routesよりtweet_pathはtweet/:idとなりtweetsコントローラーのshowアクションへ。
+          tweet_path(tweet)より:idは詳細リンクをクリックしたツイートのidとなる。
+          httpメソッドが記述されていない場合、デフォルトはgetとなる。
+          クリックされたtweetのidを’１’としてhtmlで表すと
+           -->
         </li>
-         <% if current_user &&  current_user.id == tweet.user_id %>
+         <% if user_signed_in? &&  current_user.id == tweet.user_id %>
+         <!--user_signed_in?はdeviseを導入したときに使えるヘルパーメソッド
+             user_signed_in?はユーザーがログインしていたらtrue,
+             ログインしていなければfalseを返す。
+             current_userはdeviseを導入することで使うことができるヘルパーメソッドで
+             ログインしているユーザーのインスタンスとして扱うことができる。
+             current_user.idはログインしているユーザーのidを表している。
+             tweet.user_idはtweetインスタンスのuser_idのデータを呼び出している。
+             したがって↑の演算式を要約すると
+             「ユーザーがログインしている」かつ「ログインしているユーザーのidとそのツイートインスタンスのidが同じ」
+             となる。
+             先にユーザーがログインしていることを確認しないと、current_userでエラーが起きてしまう。-->
             <li>
               <%= link_to '編集',"/tweets/#{tweet.id}
               /edit" %>
+              <!-- link_toに関しては上記参照
+              パスは’/tweets/tweetのid/edit’で表されている。
+              rake routesよりtweetコントローラーのeditアクションが動く。
+              httpメソッドが記述されていない場合、デフォルトはgetとなる。
+              クリックされたtweetのidを’１’としてhtmlで表すと
+              <a href="tweets/1">編集</a>-->
             </li>
             <li>
               <%= link_to '削除',  tweet_path(tweet),method: :delete %>
+              <!-- link_toについては上記参照。
+              またパスはprefixを使っている。
+              rake routesよりtweet_pathはtweet/:idとなる。
+              tweet_path(tweet)より:idは詳細リンクをクリックしたツイートのidとなる。
+              httpメソッドはdeleteと記述されているのでrake routesよりdestroyアクションへ。
+              クリックされたtweetのidを’１’としてhtmlで表すと
+              <a href="tweets/1" method="DELETE">削除</a>-->
              </li>
             <% end %>
            </ul>
          </div>
        <p>
         <%= simple_format(tweet.text) %>
+        <!-- simple_formatは文章の表示を適応させるために使う
+             具体的には以下の2つ
+             1,改行は<br/>を付与
+             2,文字列を<p>で囲む
+             上記の場合だとtweet.textの文字列を上記の二つに従ってhtmlで表示させることができる。-->
         </p>
         <span class="name">
           <a href="">
             <span>投稿者</span><%= tweet.user.nickname %>
+          <!-- tweet.user.nicknameはアソシエーションを使っている。
+          tweetインスタンスに紐づいたuserモデルインスタンスのnicknameを呼び出している。
+          その結果を<%= %>で出力している。-->
           </a>
         </span>
       </div>
+      <!-- 部分テンプレート
+      view内で繰り返し使う部分を部分テンプレートを使うことで省略することができる。
+      分部テンプレートのファイル名には接頭に「 _ 」を付ける必要がある。  -->
