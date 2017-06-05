@@ -1,7 +1,15 @@
  <div class="contents row" >
     <p><%= @nickname %>さんの投稿一覧</p>
+    <!-- @nicknameはUserコントローラーの@nicknameから呼び出されている。 -->
     <% @tweets.each do |tweet| %>
       <%= render partial: "tweets/tweet",locals: { tweet: tweet} %>
+      <!-- renderは部分テンプレートを呼び出すときに使うヘルパーメソッド。
+      partialで具体的にどの部分テンプレートを呼び出すか指定できる。
+      localsでは部分テンプレートに書いてある変数がhtmlのどの変数に対応しているのかを記述することができる。
+      ↑の場合だと「_tweet.html.erbを指定してそのファイルのtweetはhtmlのtweet(eachによって呼び出された)として扱う」という意味になる。-->
     <% end %>
     <%= paginate(@tweets) %>
+    <!-- paginateはページネーションを表現するために使うヘルパーメソッド。
+    kaminariを導入することで使うことができる。
+    引数にはコントローラーで定義した変数(pageメソッドを使った)が必要。 -->
   </div>

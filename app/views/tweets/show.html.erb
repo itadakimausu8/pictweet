@@ -1,28 +1,67 @@
 <div class ="contents row">
   <div class="content_post" style="background-image: url(<%= @tweet.image %>);">
     <% if user_signed_in? && current_user.id == @tweet.user_id %>
+    <!--user_signed_in?はdeviseを導入したときに使えるヘルパーメソッド
+    user_signed_in?はユーザーがログインしていたらtrue,
+    ログインしていなければfalseを返す。
+    current_userはdeviseを導入することで使うことができるヘルパーメソッドで
+    ログインしているユーザーのインスタンスとして扱うことができる。
+    current_user.idはログインしているユーザーのidを表している。
+    tweet.user_idはtweetインスタンスのuser_idのデータを呼び出している。
+    したがって↑の演算式を要約すると
+    「ユーザーがログインしている」かつ「ログインしているユーザーのidとそのツイートインスタンスのidが同じ」となる。
+    先にユーザーがログインしていることを確認しないと、current_userでエラーが起きてしまう。-->
       <div class="more">
         <span><%= image_tag 'arrow_top.png' %></span>
+        <!-- image_tagはapp/assets/imagesから画像を呼び出すために使うヘルパーメソッドである。
+        画像の名前を書くだけで呼び出すことができる。 -->
       <ul class="more_list">
         <li>
           <%= link_to '編集', "/tweets/#{@tweet.id}/edit", method: :get %>
+           <!-- link_toに関しては上記参照
+              パスは’/tweets/tweetのid/edit’で表されている。
+              rake routesよりtweetコントローラーのeditアクションが動く。
+              httpメソッドが記述されていない場合、デフォルトはgetとなる。
+              クリックされたtweetのidを’１’としてhtmlで表すと
+              <a href="tweets/1">編集</a>-->
         </li>
         <li>
           <%= link_to '削除', "/tweets/#{@tweet.id}",method: :delete %>
+          <!-- link_toについては上記参照。
+              またパスはprefixを使っている。
+              rake routesよりtweet_pathはtweet/:idとなる。
+              tweet_path(tweet)より:idは詳細リンクをクリックしたツイートのidとなる。
+              httpメソッドはdeleteと記述されているのでrake routesよりdestroyアクションへ。
+              クリックされたtweetのidを’１’としてhtmlで表すと
+              <a href="tweets/1" method="DELETE">削除</a>-->
         </li>
       </ul>
     </div>
     <% end %>
     <%= simple_format(@tweet.text) %>
+            <!-- simple_formatは文章の表示を適応させるために使う
+             具体的には以下の2つ
+             1,改行は<br/>を付与
+             2,文字列を<p>で囲む
+             上記の場合だとtweet.textの文字列を上記の二つに従ってhtmlで表示させることができる。-->
     <span class="name">
       <a href="/users/<%= @tweet.user.id %>">
         <span>投稿者</span><%= @tweet.user.nickname %>
+        <!-- tweet.user.nicknameはアソシエーションを使っている。
+          tweetインスタンスに紐づいたuserモデルインスタンスのnicknameを呼び出している。
+          その結果を<%= %>で出力している。-->
       </a>
     </span>
   </div>
   <div class="container">
-    <% if current_user %>
+    <% if user_signed_in? %>
+   <!--[もしユーザーがサインインしているなら]という意味  -->
       <%= form_tag("/tweets/#{@tweet.id}/comments",method: :post) do %>
+      <!-- form_tagはフォーム画面を簡単に作りたいときに使うヘルパーメソッド。
+    form_tag('パス')と記述することでフォームを送信した後のパスを指定できる。
+    @tweet.idは今詳細を見ているツイートのidを表している。
+    上記の場合だと送信したとき指定したURL(/tweets/現在みているtweetのid/comments)、httpメソッドをpostのパスに飛ぶことができる。
+    送られた情報はparamsと呼ばれるハッシュ値でアクションに送られる。 -->
         <textarea cols="30" name="text" placeholder="コメントする" rows="2"></textarea>
         <input type=submit value="SENT">
         <% end %>
@@ -30,9 +69,26 @@
       <div class ="comments">
         <h4>＜コメント一覧＞</h4>
         <% if @comments %>
+        <!-- 「もしコメントがあるのなら」という意味。 -->
           <% @comments.each do |comment| %>
+          <!-- eachメソッドについてはindex.html.erbを参照。
+          @commentsの中に入っているのは現在みているツイートのコメントをまとめた配列である。その一つ一つの要素をcommentという変数で表す。 -->
             <p>
               <storng><%= link_to comment.user.nickname,"/users/#{comment.user_id}" %>:</storng><%= comment.text %>
+              <!-- link_toメソッドに関しては_tweet.html.erbを参照。
+              comment.user.nicknameはアソシエーションである。
+              したがってそのコメントに紐づくuserモデルインスタンスのnicknameを呼び出している。
+              (そのコメントを投稿したユーザーのnickname)
+              comment.user_idはそのコメントをしたuserのidを表す。
+              comment.textはcommentインスタンスのtextを呼び出している。
+              したがって↑のコードは
+              書いた投稿者のニックネームをtaro,idを1,書いたコメントをabcとすると
+              <%= link_to taro ,’users/1’ %>となる。
+              htmlで表すと
+              <strong><a href="users/1">taro</a></strong><p>abc</p>となる。
+
+
+               -->
             </p>
           <% end %>
           <% end %>

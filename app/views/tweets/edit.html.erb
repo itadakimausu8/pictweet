@@ -1,10 +1,22 @@
  <div class="contents row">
     <%= form_for(@tweet) do |f| %>
+    <!-- railsのセキュリティシステムによって通常のinputタグが使えないのでform_tagを使う必要がある。
+    引数にはそのフォームで扱うモデルインスタンスを書く。
+    モデルを使う際form_tagでも記述することはできるがform_forを使ったほうが少ないコードで記述することができる。
+(モデルを扱うということはデータベースに関係するフォーラムを使用するときということ。）
+したがってform_forを使うのが一般的である。 -->
       <h3>
         編集する
       </h3>
       <%= f.text_field :image, placeholder: "Image Url",  name:"image", autofocus:"true" %>
+      <!-- text_fieldはtextのinputタグを表示できる。
+       htmlで表すと
+       <input id="Tweet_image" name="image" type="text" autofocus="true" placeholder="Image Url"> -->
       <%= f.text_field :text, cols:"30", name:"text", rows:"10" %>
+      <!-- htmlで表すと
+       <input id="Tweet_text" name="text" type="text" cols="30" rows="10"> -->
       <%= f.submit "SENT"%>
+      <!-- submitはsubmitのinputタグを表示する。
+      <input type="submit" value="SENT"> -->
     <% end %>
   </div>
