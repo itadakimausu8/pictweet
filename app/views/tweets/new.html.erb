@@ -1,10 +1,11 @@
 <div class="contents row">
   <div class="container">
     <%= form_tag('/tweets', method: :post) do %>
-    <!-- form_tagはフォーム画面を簡単に作りたいときに使うヘルパーメソッド。
+    <!-- railsのセキュリティシステムによって通常のinputタグが使えないのでform_tagを使う必要がある。
     form_tag('パス')と記述することでフォームを送信した後のパスを指定できる。
     上記の場合だと送信したとき指定したURL(/tweets)、httpメソッドをpostのパスに飛ぶことができる。
-    送られた情報はparamsと呼ばれるハッシュ値でアクションに送られる。 -->
+    送られた情報はparamsと呼ばれるハッシュ値でアクションに送られる。
+    モデルを扱っているので実際に実装するときはform_forのほうが良い。 -->
       <h3>
         投稿する
       </h3>
